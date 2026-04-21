@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --ios-blue: #007AFF; --bg: #020617; }
+        body { background-color: var(--bg); background-image: radial-gradient(at 0% 0%, rgba(30, 58, 138, 0.2) 0, transparent 50%), radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.1) 0, transparent 50%); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; color: #f8fafc; min-height: 100vh; overflow: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .sidebar-item { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 18px; }
+        .active-mod { background: linear-gradient(135deg, rgba(0, 122, 255, 0.3), rgba(0, 122, 255, 0.1)); color: white !important; border: 1px solid rgba(0, 122, 255, 0.4); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); }
+        .content-card { animation: slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes slideIn { from { opacity: 0; transform: scale(0.98) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .progress-fill { transition: width 1s cubic-bezier(0.65, 0, 0.35, 1); }
+        .code-box { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.05); font-family: 'Fira Code', monospace; }
+        #sidebar-overlay { transition: opacity 0.4s ease; }
+    </style>
+</head>
+<body class="flex flex-col">
+
+    <nav class="h-20 px-6 flex items-center justify-between glass z-[100] border-b border-white/10">
+        <div class="flex items-center gap-4">
+            <button onclick="toggleMenu()" class="lg:hidden w-11 h-11 flex items-center justify-center rounded-2xl glass active:scale-90 transition-transform">
+                <i class="fas fa-bars-staggered text-blue-500 text-lg"></i>
+            </button>
+            <div class="flex flex-col">
+                <span class="text-xl font-black tracking-tighter italic uppercase leading-none">Nexus<span class="text-blue-500">Academy</span></span>
+                <span class="text-[9px] font-bold text-slate-500 tracking-[0.3em] mt-1 uppercase">Learning Cyber Security</span>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <a href="https://www.blogger.com/blog/post/edit/preview/4725607885800276200/420772216005716480" class="w-11 h-11 rounded-full glass flex items-center justify-center border-white/10 active:scale-95 transition-all group">
+                <i class="fas fa-house text-slate-400 group-hover:text-blue-500 transition-colors text-sm"></i>
+            </a>
+            <div onclick="openDevInfo()" class="w-11 h-11 rounded-full glass flex items-center justify-center border-white/10 active:scale-95 transition-all cursor-pointer group overflow-hidden">
+                <i class="fas fa-user text-slate-400 group-hover:text-blue-500 transition-colors"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex flex-1 overflow-hidden relative">
+        <div id="sidebar-overlay" onclick="toggleMenu()" class="fixed inset-0 bg-black/70 z-[80] hidden lg:hidden opacity-0"></div>
+        
+        <aside id="sidebar" class="fixed inset-y-0 left-0 w-80 glass border-r border-white/10 p-6 z-[90] transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-y-auto">
+            <div class="mb-10 p-6 rounded-[28px] bg-white/5 border border-white/5 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-blue-600/10 blur-2xl rounded-full -mr-10 -mt-10"></div>
+                <div class="relative z-10 text-center">
+                    <div class="w-12 h-12 rounded-full bg-blue-600/20 flex items-center justify-center mx-auto mb-3 border border-blue-500/30">
+                        <i class="fas fa-user-shield text-blue-500"></i>
+                    </div>
+                    <div class="flex justify-between items-end mb-2">
+                        <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest">Progress</span>
+                        <span id="pct" class="text-xl font-black font-mono">0%</span>
+                    </div>
+                    <div class="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+                        <div id="bar" class="progress-fill h-full bg-blue-500 shadow-[0_0_10px_#3b82f6]" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="nav-list" class="space-y-8"></div>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto p-4 md:p-12">
+            <div id="main-view" class="max-w-4xl mx-auto h-full">
+                <div class="h-full flex flex-col items-center justify-center text-center content-card">
+                    <div class="w-20 h-20 bg-blue-600/5 rounded-[30px] flex items-center justify-center mb-8 border border-blue-500/10">
+                        <i class="fas fa-terminal text-3xl text-blue-500"></i>
+                    </div>
+                    <h1 class="text-3xl font-black mb-4 tracking-tight">CySec Learn</h1>
+                    <p class="text-slate-400 text-sm max-w-sm leading-relaxed">Selamat datang di Terminal Pembelajaran. Silakan sinkronisasi modul melalui sidebar untuk memulai.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="modal" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-6 bg-black/90 backdrop-blur-xl">
+        <div class="glass max-w-sm w-full rounded-[40px] p-10 text-center content-card border border-white/10">
+            <div class="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center text-3xl mx-auto mb-6 shadow-2xl border border-white/10 overflow-hidden">
+                <i class="fas fa-user text-slate-500"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">M. Nawawi S.J</h2>
+            <p class="text-blue-500 text-[10px] font-bold uppercase tracking-widest mb-6">Full Stack Dev</p>
+            <div class="space-y-3 mb-8 text-left">
+                <div class="p-3 glass rounded-2xl flex justify-between items-center text-xs">
+                    <span class="text-slate-500">Status</span>
+                    <span class="text-green-500 font-bold">Online</span>
+                </div>
+                <div class="p-3 glass rounded-2xl flex justify-between items-center text-xs">
+                    <span class="text-slate-500">Version</span>
+                    <span class="text-slate-300">1.0</span>
+                </div>
+            </div>
+            <button onclick="openDevInfo()" class="w-full py-4 bg-white/5 hover:bg-white/10 rounded-2xl font-bold text-sm transition-all border border-white/5 active:scale-95">CLOSE PANEL</button>
+        </div>
+    </div>
+
+    <script>
+        const curriculum = [
+            {
+                cat: "Foundation Core", color: "text-blue-400",
+                mods: [
+                    { id: "net", icon: "fa-network-wired", title: "Internet Architecture", content: `
+                        <h2 class="text-3xl font-black mb-4">Dasar Jaringan & OS</h2>
+                        <p class="text-slate-400 mb-6 text-sm leading-relaxed">Memahami TCP/IP, DNS, Routing, serta kontrol penuh pada sistem Linux & Windows.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div class="p-4 glass rounded-2xl border-l-4 border-blue-500">
+                                <h4 class="font-bold text-xs mb-1">TCP/IP Stack</h4>
+                                <p class="text-[10px] text-slate-500 italic">4-Layer model untuk komunikasi data global.</p>
+                            </div>
+                            <div class="p-4 glass rounded-2xl border-l-4 border-blue-500">
+                                <h4 class="font-bold text-xs mb-1">DNS Resolution</h4>
+                                <p class="text-[10px] text-slate-500 italic">Mapping domain name ke alamat IP publik.</p>
+                            </div>
+                        </div>
+                        <div class="code-box p-5 rounded-2xl text-[10px] text-green-400 leading-relaxed shadow-inner">
+                            # Check network config<br>ifconfig -a<br># Routing table check<br>netstat -rn
+                        </div>
+                    `},
+                    { id: "crypto", icon: "fa-vault", title: "Cryptography", content: `
+                        <h2 class="text-3xl font-black mb-4 text-blue-500">Kriptografi</h2>
+                        <p class="text-slate-400 mb-6 text-sm">Teknik enkripsi untuk melindungi integritas data.</p>
+                        <div class="p-5 glass rounded-3xl border border-white/5 mb-4">
+                            <h4 class="text-xs font-bold uppercase text-blue-400 mb-3 italic tracking-widest">Encrypt Example:</h4>
+                            <p class="text-[10px] text-slate-300 leading-relaxed"><b>AES-256:</b> Digunakan untuk enkripsi file agar tidak mudah didecompile.</p>
+                        </div>
+                    `}
+                ]
+            },
+            {
+                cat: "Offensive Security", color: "text-red-400",
+                mods: [
+                    { id: "eth", icon: "fa-user-secret", title: "Ethical Hacking", content: `
+                        <h2 class="text-3xl font-black mb-4 text-red-500">Ethical Hacking</h2>
+                        <p class="text-slate-400 mb-6 text-sm">Penetration testing untuk menemukan celah sebelum dieksploitasi pihak jahat.</p>
+                        <div class="bg-red-500/5 border border-red-500/10 p-5 rounded-[30px] mb-4">
+                            <h4 class="text-xs font-bold text-red-400 mb-2">Hacker Lifecycle:</h4>
+                            <p class="text-[10px] text-slate-400 italic leading-relaxed">Reconnaissance -> Scanning -> Gaining Access -> Maintaining Access -> Clearing Tracks.</p>
+                        </div>
+                    `},
+                    { id: "web", icon: "fa-globe", title: "Web & App Security", content: `
+                        <h2 class="text-3xl font-black mb-4 text-red-500">Keamanan Web</h2>
+                        <p class="text-slate-400 mb-6 text-sm">Sanitasi input untuk mencegah serangan injeksi (SQLi & XSS).</p>
+                        <div class="code-box p-5 rounded-2xl text-[10px] text-red-400 mb-4">
+                            # SQL Injection Test<br>' OR 1=1 -- <br># XSS Payload<br>&lt;script&gt;alert('XSS')&lt;/script&gt;
+                        </div>
+                    `}
+                ]
+            },
+            {
+                cat: "Infrastructure", color: "text-indigo-400",
+                mods: [
+                    { id: "cloud", icon: "fa-cloud-shield", title: "Cloud Security", content: `
+                        <h2 class="text-3xl font-black mb-4 text-indigo-500">Jaringan & Cloud</h2>
+                        <p class="text-slate-400 mb-6 text-sm">Konfigurasi Firewall, VPN, dan IDS/IPS di infrastruktur modern.</p>
+                        <div class="space-y-2 text-xs">
+                            <div class="p-3 glass rounded-xl border border-white/5 flex gap-3 items-center">
+                                <i class="fas fa-shield-halved text-indigo-500 text-[10px]"></i>
+                                <span>Zero Trust Architecture</span>
+                            </div>
+                        </div>
+                    `},
+                    { id: "malware", icon: "fa-microchip", title: "Malware Analysis", content: `
+                        <h2 class="text-3xl font-black mb-4 text-indigo-500">Analisis Malware</h2>
+                        <p class="text-slate-400 mb-6 text-sm">Identifikasi dan mitigasi perangkat lunak berbahaya.</p>
+                    `}
+                ]
+            },
+            {
+                cat: "Automation", color: "text-emerald-400",
+                mods: [
+                    { id: "prog", icon: "fa-code-branch", title: "Security Scripting", content: `
+                        <h2 class="text-3xl font-black mb-4 text-emerald-500">Programming</h2>
+                        <p class="text-slate-400 mb-6 text-sm">Scripting Python untuk otomatisasi alat keamanan.</p>
+                        <div class="code-box p-5 rounded-2xl text-[10px] text-emerald-400">
+                            import socket<br>s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)<br>s.connect(("127.0.0.1", 80))
+                        </div>
+                    `},
+                    { id: "risk", icon: "fa-scale-balanced", title: "Risk & Law", content: `
+                        <h2 class="text-3xl font-black mb-4 text-emerald-500">Manajemen Risiko</h2>
+                        <p class="text-slate-400 mb-6 text-sm italic">Kepatuhan hukum, etika profesional, dan tata kelola keamanan informasi.</p>
+                    `}
+                ]
+            }
+        ];
+
+        let done = new Set();
+
+        function init() {
+            const list = document.getElementById('nav-list');
+            list.innerHTML = curriculum.map(g => `
+                <div>
+                    <h3 class="text-[10px] font-black ${g.color} uppercase tracking-[0.3em] mb-4 pl-2">${g.cat}</h3>
+                    <div class="space-y-2">
+                        ${g.mods.map(m => `
+                            <div onclick="renderMod('${m.id}')" id="btn-${m.id}" class="sidebar-item p-4 flex items-center justify-between cursor-pointer text-slate-400 group active:scale-95 transition-all">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-8 h-8 rounded-xl glass flex items-center justify-center group-hover:bg-blue-500/20 transition-all">
+                                        <i class="fas ${m.icon} text-[10px]"></i>
+                                    </div>
+                                    <span class="text-xs font-bold group-hover:text-white transition-colors">${m.title}</span>
+                                </div>
+                                <i id="chk-${m.id}" class="fas fa-circle-check text-[10px] opacity-5 transition-all"></i>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderMod(id) {
+            let data;
+            curriculum.forEach(g => { const f = g.mods.find(m => m.id === id); if(f) data = f; });
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active-mod'));
+            document.getElementById(`btn-${id}`).classList.add('active-mod');
+            if(window.innerWidth < 1024) toggleMenu();
+
+            document.getElementById('main-view').innerHTML = `
+                <div class="content-card">
+                    <div class="glass p-8 md:p-14 rounded-[50px] shadow-2xl border border-white/10 relative overflow-hidden">
+                        <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-blue-600/5 blur-[100px] rounded-full"></div>
+                        ${data.content}
+                        <button onclick="finish('${id}')" class="w-full mt-10 py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-3xl font-black text-[10px] tracking-widest transition-all shadow-xl shadow-blue-600/20 active:scale-[0.98] uppercase">
+                            Verify Module Completion
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function finish(id) {
+            done.add(id);
+            document.getElementById(`chk-${id}`).classList.remove('opacity-5');
+            document.getElementById(`chk-${id}`).classList.add('text-blue-500', 'opacity-100');
+            const p = Math.round((done.size / 8) * 100);
+            document.getElementById('bar').style.width = p + '%';
+            document.getElementById('pct').innerText = p + '%';
+            const r = document.getElementById('rank');
+            if(p >= 100) r.innerText = "Level: Nexus Elite Operator";
+            else if(p > 50) r.innerText = "Level: Specialist Analyst";
+            else r.innerText = "Level: Field Agent";
+        }
+
+        function toggleMenu() {
+            const s = document.getElementById('sidebar');
+            const o = document.getElementById('sidebar-overlay');
+            const isHidden = s.classList.contains('-translate-x-full');
+            if(isHidden) { s.classList.remove('-translate-x-full'); o.classList.remove('hidden'); setTimeout(() => o.classList.add('opacity-100'), 10); }
+            else { s.classList.add('-translate-x-full'); o.classList.remove('opacity-100'); setTimeout(() => o.classList.add('hidden'), 400); }
+        }
+
+        function openDevInfo() { document.getElementById('modal').classList.toggle('hidden'); }
+        init();
+    </script>
+</body>
+</html>
